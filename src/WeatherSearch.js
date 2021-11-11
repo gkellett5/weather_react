@@ -8,12 +8,16 @@ export default function WeatherSearch() {
 
   function displayWeather(response) {
     setLoaded(true);
+    console.log(response.data);
     setWeather({
       temperature: response.data.main.temp,
       wind: response.data.wind.speed,
       humidity: response.data.main.humidity,
-      icon: `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
+      icon: `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@4x.png`,
       description: response.data.weather[0].description,
+      feelsLike: response.data.main.feels_like,
+      tempMin: response.data.main.temp_min,
+      tempMax: response.data.main.temp_max,
     });
   }
 
@@ -30,7 +34,12 @@ export default function WeatherSearch() {
 
   let form = (
     <form onSubmit={handleSubmit}>
-      <input type="search" placeholder="Enter a city.." onChange={updateCity} />
+      <input
+        type="search"
+        placeholder="search for your city..."
+        onChange={updateCity}
+        className="search-bar"
+      />
       <button type="Submit">Search</button>
     </form>
   );
@@ -39,15 +48,33 @@ export default function WeatherSearch() {
     return (
       <div>
         {form}
-        <ul>
-          <li>Temperature: {Math.round(weather.temperature)}°C</li>
-          <li>Description: {weather.description}</li>
-          <li>Humidity: {weather.humidity}%</li>
-          <li>Wind: {weather.wind}km/h</li>
+        <h5>Today's weather in...</h5>
+        <h1>{city}</h1>
+        <ul className="column">
           <li>
-            <img src={weather.icon} alt={weather.description} />
+            <img
+              src={weather.icon}
+              alt={weather.description}
+              className="icon"
+            />
           </li>
+          <ul>
+            <li className="description">{weather.description}</li>
+            <li className="data">Humidity: {weather.humidity}%</li>
+            <li className="data">Wind: {weather.wind}km/h</li>
+          </ul>
+          <ul>
+            <li className="temperature">{Math.round(weather.temperature)}°</li>
+            <li className="feels-like">
+              Feels like {Math.round(weather.feelsLike)}°
+            </li>
+            <li className="high-low">
+              <span> High {Math.round(weather.tempMax)}° </span> |{" "}
+              <span className="low"> Low {Math.round(weather.tempMin)}°</span>
+            </li>
+          </ul>
         </ul>
+        <hr />
       </div>
     );
   } else {
